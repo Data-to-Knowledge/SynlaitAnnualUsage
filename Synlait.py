@@ -139,8 +139,11 @@ HydroUsage['Day'] = 1
 HydroUsage['time'] = pd.to_datetime(HydroUsage['DateTime'], errors='coerce')
 HydroUsage['year'] = HydroUsage['time'].dt.strftime('%Y').astype(int)
 HydroUsage['month'] = HydroUsage['time'].dt.strftime('%m').astype(int)
-HydroUsage['FY'] = np.where(HydroUsage['month'] < 7, 
-            HydroUsage['year']-1, HydroUsage['year'])
+HydroUsage['FY'] = np.where(
+        HydroUsage['month'] < 7, 
+        ((HydroUsage['year']-1).astype(str) + '/' + HydroUsage['year'].astype(str)),
+        (HydroUsage['year'].astype(str) + '/' + (HydroUsage['year']+1).astype(str) )
+        )
 
 # Sum daily usage and data days over a year for each WAP
 SynlaitUsage = HydroUsage.groupby(
@@ -170,3 +173,9 @@ SynlaitUsage = SynlaitUsage[['ConsentNo','WAP','FY','AnnualVolume','DaysOfData']
 # Export data
 SynlaitUsage.to_csv('SynlaitUsage.csv')
 
+
+HydroUsage['tempFY'] = np.where(
+        HydroUsage['month'] < 7, 
+        ((HydroUsage['year']-1).astype(str) + '/' + HydroUsage['year'].astype(str)),
+        (HydroUsage['year'].astype(str) + '/' + (HydroUsage['year']+1).astype(str) )
+        )
